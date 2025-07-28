@@ -1,4 +1,4 @@
-## What is Nuxt UI
+## What is Nuxt UI?
 
 Nuxt UI is the official UI library of Nuxt.
 
