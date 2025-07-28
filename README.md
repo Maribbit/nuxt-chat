@@ -6,7 +6,7 @@ Notes are taken in `/note` directory.
 
 # Tool Docs
 
-[pnpm](https://pnpm.io/)
+[pnpm(10.13.1)](https://pnpm.io/)
 [husky](https://typicode.github.io/husky/)
 [Nuxt](https://nuxt.com/)
 [Nuxt UI](https://ui.nuxt.com/)
