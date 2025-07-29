@@ -9,4 +9,10 @@ export default defineNuxtConfig({
       include: ["debug"],
     },
   },
+  mdc: {
+    highlight: {
+      theme: "material-theme-palenight",
+      langs: ["html", "markdown", "vue", "typescript", "javascript"],
+    },
+  },
 });

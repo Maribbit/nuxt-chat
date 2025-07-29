@@ -46,7 +46,7 @@
             }"
           >
             <div class="message-content">
-              {{ message.content }}
+              <MarkdownRenderer :content="message.content" />
             </div>
           </div>
           <span v-if="typing" class="typing-indicator"> &#9611; </span>
