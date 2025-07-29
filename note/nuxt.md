@@ -40,3 +40,23 @@ We can find them and many other functions for `Event` in [h3 Request](https://v1
 ## ofetch
 
 This is what behind `$fetch` in Nuxt JS.
+
+# Configuration
+
+The [official configuration doc](https://nuxt.com/docs/4.x/api/nuxt-config) is really long.
+
+## [runtimeConfig](https://nuxt.com/docs/4.x/api/nuxt-config#runtimeconfig-1)
+
+Useful for dynamic config or environment variables, either server-only or client-only(`public`).
+
+## [app.config.ts](https://nuxt.com/docs/4.x/guide/directory-structure/app/app-config)
+
+This is **reactive**, and **global**, meaning that it is always exposed to client side.
+
+| compare       | `runtimeConfig`                         | `app.config.ts`                             |
+| ------------- | --------------------------------------- | ------------------------------------------- |
+| How is it set | Set at runtime externally               | Set at build time                           |
+| Sensitive?    | Secrets and sensitive information       | **NO** sensitive information                |
+| Data Type     | Only strings                            | Any TypeScript                              |
+| Changable?    | Can **NOT** change while app is running | Can be updated per request                  |
+| Usecase       | URLs(DB, Auth), secrets                 | theme, feature toggles, other app meta-data |
