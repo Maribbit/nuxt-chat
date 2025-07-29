@@ -1,6 +1,6 @@
 # **UnJS**
 
-Many essential composables and API in Nuxt are built on [UnJS](https://unjs.io/packages?q=&order=1&orderBy=title) ecosystem.
+Many essential composables and API in Nuxt are forming [UnJS](https://unjs.io/packages?q=&order=1&orderBy=title) ecosystem.
 
 ## Unhead
 
@@ -10,7 +10,7 @@ Many essential composables and API in Nuxt are built on [UnJS](https://unjs.io/p
 
 [`useHeadSafe`](https://nuxt.com/docs/4.x/api/composables/use-head-safe) can prevent potential code injection like setting innerHTML.
 
-## **h3**
+## h3
 
 [h3JS](https://github.com/h3js) is a collection of HTTP tools.
 
@@ -36,3 +36,7 @@ They are **async** functions applied to the `Event` object to parse its body.
 It involves another UnJS library [destr](https://github.com/unjs/destr), a secure and convenient alternative for `JSON.parse()`
 
 We can find them and many other functions for `Event` in [h3 Request](https://v1.h3.dev/utils/request#readbodyevent-options-strict).
+
+## ofetch
+
+This is what behind `$fetch` in Nuxt JS.
