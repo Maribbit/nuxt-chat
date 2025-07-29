@@ -23,6 +23,7 @@
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
+    "@nuxtjs/mdc": "^0.17.2",
     "husky": "^9.1.7"
   }
 }
