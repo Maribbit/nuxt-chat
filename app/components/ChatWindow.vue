@@ -3,7 +3,7 @@
 
   const props = defineProps<{
     messages: ChatMessage[];
-    chat: Chat;
+    chat?: Chat;
     typing: boolean;
   }>();
 

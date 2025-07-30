@@ -1,3 +1,28 @@
+# Core Composables
+
+These are unique composables defined in Nuxt JS.
+
+## `useState`
+
+We can see its detail in [State Management guide](https://nuxt.com/docs/4.x/getting-started/state-management#best-practices) and [useState API doc](https://nuxt.com/docs/4.x/api/composables/use-state).
+
+SSR causes some issue when using `ref()`. For example if we define these two states in a single component, we will see **4 logs**, two from the server and two inside the browser.
+
+```typescript
+const stateTest = useState("random", Math.random);
+const refTest = ref(Math.random());
+console.log("State Test:", stateTest.value); // these two are identical
+console.log("Ref Test:", refTest.value); // these two are different
+```
+
+The same component is rendered both in server and in browser, which causes `ref` initialization run twice in different environment.
+
+With `useState`, the state is initialized only once and transferred to the browser.
+
+What's more, `useState` defines a **global** state, meaning that if the same code above is copied to another component, `stateTest` still logs the same value.
+
+Which means that it can **replace Pinia** most of the time.
+
 # **UnJS**
 
 Many essential composables and API in Nuxt are forming [UnJS](https://unjs.io/packages?q=&order=1&orderBy=title) ecosystem.
