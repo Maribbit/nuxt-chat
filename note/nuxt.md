@@ -1,6 +1,6 @@
 # State Management
 
-These are unique composables defined in Nuxt JS.
+Start with `useState`, we can create in-memory states inside browser. They are reset if the page is refreshed. 
 
 ## `useState`
 
@@ -159,6 +159,25 @@ A simple approach is to redirect the user to another page, with `{replace: true}
 if (!chatFromChats.value) {
     navigateTo("/", { replace: true });
   }
+```
+
+## `<NuxtLink>`
+
+[NuxtLink doc](https://nuxt.com/docs/4.x/api/components/nuxt-link#nuxtlink)
+
+Anywhere we want an anchor tag `<a/>` to be a client-side navigation, we should replace it with `<NuxtLink/>`, a wrapped Vue Router's `<RouterLink/>`.
+
+```vue
+<template>
+  <NuxtLink
+    v-for="chat in chats"
+    :key="chat.id"
+    :to="`/chats/${chat.id}`"
+    active-class="text-(--ui-text-primary) bg-(--ui-bg-elevated)"
+  >
+    {{ chat.title || "Untitled Chat" }}
+  </NuxtLink>
+</template>
 ```
 
 ## Vue Router
