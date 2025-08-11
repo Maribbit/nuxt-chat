@@ -1,9 +1,24 @@
 <script setup lang="ts">
+  import type { NavigationMenuItem } from "@nuxt/ui";
+  import type { Chat } from "../types";
+
   defineProps<{
     isOpen: boolean;
   }>();
 
   const { chats } = useChats();
+
+  const route = useRoute();
+
+  function formatChatItem(chat: Chat): NavigationMenuItem {
+    return {
+      label: chat.title || "Untitled Chat",
+      to: `/chats/${chat.id}`,
+      active: route.params.id === chat.id,
+    };
+  }
+
+  const formattedChats = computed(() => chats.value.map(formatChatItem));
 </script>
 
 <template>
@@ -17,15 +32,12 @@
           <h2 class="text-sm font-semibold text-(--ui-text-muted)">Chats</h2>
         </div>
         <div class="space-y-1">
-          <NuxtLink
-            v-for="chat in chats"
-            :key="chat.id"
-            :to="`/chats/${chat.id}`"
-            class="block text-(--ui-text-muted) px-3 py-1 text-sm rounded-md transition-colors duration-200 ease-in-out hover:bg-[var(--ui-bg-elevated)]"
-            active-class="text-(--ui-text-primary) bg-(--ui-bg-elevated)"
-          >
-            {{ chat.title || "Untitled Chat" }}
-          </NuxtLink>
+          <UNavigationMenu
+            orientation="vertical"
+            class="w-full mb-4"
+            :items="formattedChats"
+            default-open
+          />
         </div>
       </div>
     </div>
