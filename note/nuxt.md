@@ -23,9 +23,9 @@ What's more, `useState` defines a **global** state, meaning that if the same cod
 
 Which means that it can **replace Pinia** most of the time.
 
-## Tips for State Management
+## State Management in Practice
 
-In Vue, we often use Composables to store **stateful logic**, and then define CRUD methods for those states.
+In Vue, we use Composables to encapsulate **stateful logic**, and define CRUD methods for those states.
 
 When using Pinia or Nuxt, the **Creation** methods are often replaced by **Registration** to the framework.
 
@@ -36,8 +36,9 @@ The following code is an organized nested state management pattern in an AI chat
 ```typescript
 /*
 Composable best practice in Nuxt
-"Project" contains 0 or more "Chats", related by projectId on Chat
+"Project" contains 0 or more "Chats"
 "Chats" contains 0 or more "Chat"
+Notice how these nested lists and objects are separated to smaller composables
 */
 export interface ChatMessage {
   id: string;
@@ -70,6 +71,16 @@ export default function useProjects() {
     };
     return { projects, createProject }
 }
+// `useProject.ts`
+export default function useProject(projectId: sring) {
+    // --Inject a single Project from Project Store--
+    const { projects } = useProjects();
+    const project = computed(() => projects.value.find((p) => p.id === projectId)
+    function updateProject(updatedProject: Partial<Project>) {
+        /*...*/
+    }
+    retrurn { project, updateProject }
+}
 
 // `useChats.ts`
 export default function useChats() {
@@ -85,16 +96,11 @@ export default function useChats() {
     function chatsInProject(projectId: string) {
         return chats.value.filter(() => {/*...*/})
     }
-    // expose states and methods
-    return {
-        chats,
-        createChat,
-        chatsInProject
-    }
+    return { chats, createChat, chatsInProject }
 }
 // `useChat.ts`
 export default function useChat(chatId: string) {
-    // --Register Messages Store--
+    // --Inject a single Chat from Chat Store--
     const { chats } = useChats();
     const chat = computed(() => chats.value.find(c => c.id === chatId))
     const messages = computed<ChatMessage[]>(() => chat.value?.messages || [])
