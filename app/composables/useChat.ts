@@ -16,6 +16,7 @@ export default function useChat(chatId: string) {
   }
 
   async function sendMessage(message: string) {
+    if (!chat.value) return;
     messages.value.push(createMessage(message, "user"));
 
     const data = await $fetch<ChatMessage>("/api/ai", {
@@ -25,6 +26,7 @@ export default function useChat(chatId: string) {
       },
     });
 
+    chat.value.updatedAt = new Date();
     messages.value.push(data);
   }
 

@@ -15,13 +15,76 @@ console.log("State Test:", stateTest.value); // these two are identical
 console.log("Ref Test:", refTest.value); // these two are different
 ```
 
-The same component is rendered both in server and in browser, which causes `ref` initialization run twice in different environment.
+The same component is rendered both in server and in browser, which causes `ref` initialization to run twice in different environment.
 
 With `useState`, the state is initialized only once and transferred to the browser.
 
 What's more, `useState` defines a **global** state, meaning that if the same code above is copied to another component, `stateTest` still logs the same value.
 
 Which means that it can **replace Pinia** most of the time.
+
+## Tips for State Management
+
+In Vue, we often use Composables to store **stateful logic**, and then define CRUD to those states.
+
+In Nuxt, it is similar except that the **creation** method should be carefully chosen.
+
+Also, when the states are **nested deeper** and **asynchronous** operations are added, things can get messy.
+
+The following code is a nested state management pattern in an AI chat APP.
+
+```typescript
+/*
+Composable best practice in Nuxt
+"Chats" contains 0 or more "Chat"
+*/
+export default function useChats() {
+    // --Create Chats--
+    const chats = useState<Chat[]>("chats", () => [INIT_DATA]);
+    // --Read Chats--
+    function chatsInProject(projectId: string) {
+        return chats.value.filter(() => {/*...*/})
+    }
+    // --Update Chats--
+    function createChat(options: { projectId?: string } ) {
+        const id = generateNewId();
+        chats.value.push(() => {/*...*/})
+        return id;
+    }
+    // expose states and methods
+    return {
+        chats,
+        createChat,
+        chatsInProject
+    }
+}
+
+export default function useChat(chatId: string) {
+    // --Create Chat and Messages--
+    const { chats } = useChats();
+    const chat = computed(() => chats.value.find(c => c.id === chatId))
+    const messages = computed<ChatMessage[]>(() => chat.value?.messages || [])
+    // --Update Messages Syncronously--
+    function createMessage(message: string, role ChatMessage["role"]) {
+        const id = generateNewId();
+        return {id, role, content: message}
+    }
+    // --Update Messages Asynchronously--
+    async function sendMessage(message: string) {
+        if (!chat.value) return;
+        messages.value.push(createMessage(message, "user"))
+        const data = await $fetch<ChatMessage>("/api/ai", {
+            method: "POST", body: {messages: messages.value}
+        })
+        messages.value.push(data)
+    }
+    return {
+        chats,
+        messages,
+        sendMessage
+    }
+}
+```
 
 # **UnJS**
 

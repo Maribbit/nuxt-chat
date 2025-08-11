@@ -1,9 +1,7 @@
 <template>
   <UContainer class="page-container">
     <h1 class="title">{{ appConfig.title }}</h1>
-    <UButton to="/chat" class="button" @click="handleCreateChat">
-      Start Chat
-    </UButton>
+    <UButton class="button" @click="handleCreateChat"> Start Chat </UButton>
   </UContainer>
 </template>
 
@@ -13,13 +11,9 @@
   const { createChat } = useChats();
 
   function handleCreateChat() {
-    createChat();
+    const newId = createChat();
+    navigateTo(`/chats/${newId}`);
   }
-
-  const stateTest = useState("random", Math.random);
-  const refTest = ref(Math.random());
-  console.log("State Test:", stateTest.value);
-  console.log("Ref Test:", refTest.value);
 </script>
 
 <style scoped>
