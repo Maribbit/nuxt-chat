@@ -25,31 +25,65 @@ Which means that it can **replace Pinia** most of the time.
 
 ## Tips for State Management
 
-In Vue, we often use Composables to store **stateful logic**, and then define CRUD to those states.
+In Vue, we often use Composables to store **stateful logic**, and then define CRUD methods for those states.
 
-In Nuxt, it is similar except that the **creation** method should be carefully chosen.
+When using Pinia or Nuxt, the **Creation** methods are often replaced by **Registration** to the framework.
 
-Also, when the states are **nested deeper** and **asynchronous** operations are added, things can get messy.
+When the states are **nested deeper** and **asynchronous** operations are added, things can get messy.
 
-The following code is a nested state management pattern in an AI chat APP.
+The following code is an organized nested state management pattern in an AI chat APP.
 
 ```typescript
 /*
 Composable best practice in Nuxt
+"Project" contains 0 or more "Chats", related by projectId on Chat
 "Chats" contains 0 or more "Chat"
 */
+export interface ChatMessage {
+  id: string;
+  role: "user" | "assistant";
+  content: string;
+}
+
+export interface Chat {
+  id: string;
+  title: string;
+  messages: ChatMessage[];
+  projectId?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface Project {
+  id: string;
+  name: string;
+}
+// `useProjects.ts`
+export default function useProjects() {
+    // --Register Project Store--
+    const projects = useState<Project[]>("projects", () => [MOCK_PROJECT]);
+    // --Update Store--
+    function createProject() { 
+        const id = generateNewId();
+        projects.value.push({/*...*/})
+        return project;
+    };
+    return { projects, createProject }
+}
+
+// `useChats.ts`
 export default function useChats() {
-    // --Create Chats--
+    // --Register Chat Store--
     const chats = useState<Chat[]>("chats", () => [INIT_DATA]);
-    // --Read Chats--
-    function chatsInProject(projectId: string) {
-        return chats.value.filter(() => {/*...*/})
-    }
-    // --Update Chats--
+    // --Update Store--
     function createChat(options: { projectId?: string } ) {
         const id = generateNewId();
         chats.value.push(() => {/*...*/})
         return id;
+    }
+    // --Read from Store--
+    function chatsInProject(projectId: string) {
+        return chats.value.filter(() => {/*...*/})
     }
     // expose states and methods
     return {
@@ -58,18 +92,18 @@ export default function useChats() {
         chatsInProject
     }
 }
-
+// `useChat.ts`
 export default function useChat(chatId: string) {
-    // --Create Chat and Messages--
+    // --Register Messages Store--
     const { chats } = useChats();
     const chat = computed(() => chats.value.find(c => c.id === chatId))
     const messages = computed<ChatMessage[]>(() => chat.value?.messages || [])
-    // --Update Messages Syncronously--
+    // --Update Store Synchronously--
     function createMessage(message: string, role ChatMessage["role"]) {
         const id = generateNewId();
         return {id, role, content: message}
     }
-    // --Update Messages Asynchronously--
+    // --Update Store Asynchronously--
     async function sendMessage(message: string) {
         if (!chat.value) return;
         messages.value.push(createMessage(message, "user"))
