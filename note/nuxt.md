@@ -1,4 +1,4 @@
-# Core Composables
+# State Management
 
 These are unique composables defined in Nuxt JS.
 
@@ -127,6 +127,8 @@ export default function useChat(chatId: string) {
 }
 ```
 
+# Client-Side Navigation
+
 ## `navigateTo`
 
 [`navigateTo() Doc`](https://nuxt.com/docs/4.x/api/utils/navigate-to)
@@ -141,7 +143,7 @@ This is an **Asynchronous** method built on Vue Router, providing easy client-si
 
 It takes two parameters: `to` and `options`.
 
-### Common Pitfall: No Such Page
+## Common Pitfall: No Such Page
 
 ```typescript
 await navigateTo(`/chats/${id}`);
@@ -159,7 +161,7 @@ if (!chatFromChats.value) {
   }
 ```
 
-### Vue Router
+## Vue Router
 
 As a reminder, [**Vue Router**](https://router.vuejs.org/) listens for changes in browser's URL. When the URL changes, it finds the matching route in its configuration and renders the corresponding component.
 
