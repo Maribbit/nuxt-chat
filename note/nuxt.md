@@ -210,6 +210,16 @@ As a reminder, [**Vue Router**](https://router.vuejs.org/) listens for changes i
 
 Also, it leverages the browser's `history.pushState()` and `history.replaceState()` methods to modify the URL without triggering a refresh.
 
+# Code Organization
+
+## Layers
+
+[Layer](https://nuxt.com/docs/4.x/getting-started/layers) is the official way to split a bigger Nuxt APP to many smaller ones, making each of them an independent part to be shared through GitHub, NPM, etc.
+
+[This doc](https://nuxt.com/docs/4.x/guide/going-further/layers) gives us more information about it.
+
+This is the most advanced feature in Nuxt frontend development. Its complexity is acceptable only if we are building a really complex frontend.
+
 # **UnJS**
 
 Many essential composables and API in Nuxt are forming [UnJS](https://unjs.io/packages?q=&order=1&orderBy=title) ecosystem.
