@@ -1,10 +1,10 @@
 <script setup lang="ts">
   const appConfig = useAppConfig();
 
-  const { createChat } = useChats();
+  const { createChatAndNavigate } = useChats();
 
-  function handleCreateChat() {
-    createChat();
+  async function handleCreateChat() {
+    await createChatAndNavigate();
   }
 </script>
 
@@ -12,9 +12,7 @@
   <header class="app-header">
     <div class="header-left">
       <UButton icon="i-lucide-menu" color="primary" variant="soft" />
-      <UButton icon="i-lucide-plus" to="/chats/1" @click="handleCreateChat"
-        >New Chat</UButton
-      >
+      <UButton icon="i-lucide-plus" @click="handleCreateChat">New Chat</UButton>
     </div>
     <div class="header-title">
       {{ appConfig.title }}

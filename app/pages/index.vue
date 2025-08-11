@@ -8,11 +8,10 @@
 <script setup lang="ts">
   const appConfig = useAppConfig();
 
-  const { createChat } = useChats();
+  const { createChatAndNavigate } = useChats();
 
-  function handleCreateChat() {
-    const newId = createChat();
-    navigateTo(`/chats/${newId}`);
+  async function handleCreateChat() {
+    await createChatAndNavigate();
   }
 </script>
 

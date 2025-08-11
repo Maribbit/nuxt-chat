@@ -8,8 +8,19 @@
 </template>
 
 <script setup lang="ts">
+  import type { Chat } from "~/types";
   const route = useRoute();
-  const { chat, messages, sendMessage } = useChat(route.params.id as string);
+  const {
+    chat: chatFromChats,
+    messages,
+    sendMessage,
+  } = useChat(route.params.id as string);
+
+  if (!chatFromChats.value) {
+    navigateTo("/", { replace: true });
+  }
+
+  const chat = computed(() => chatFromChats.value as Chat);
 
   const typing = ref(false);
 

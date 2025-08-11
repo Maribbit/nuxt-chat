@@ -127,6 +127,44 @@ export default function useChat(chatId: string) {
 }
 ```
 
+## `navigateTo`
+
+[`navigateTo() Doc`](https://nuxt.com/docs/4.x/api/utils/navigate-to)
+
+```typescript
+await navigateTo('https://nuxt.com', {
+  external: true
+})
+```
+
+This is an **Asynchronous** method built on Vue Router, providing easy client-side navigation.
+
+It takes two parameters: `to` and `options`.
+
+### Common Pitfall: No Such Page
+
+```typescript
+await navigateTo(`/chats/${id}`);
+```
+
+When we are navigating between pages with parameters, there is a common pitfall:
+
+**What if the page doesn't exists?**
+
+A simple approach is to redirect the user to another page, with `{replace: true}` to prevent user from going back to the wrong page.
+
+```typescript
+if (!chatFromChats.value) {
+    navigateTo("/", { replace: true });
+  }
+```
+
+### Vue Router
+
+As a reminder, [**Vue Router**](https://router.vuejs.org/) listens for changes in browser's URL. When the URL changes, it finds the matching route in its configuration and renders the corresponding component.
+
+Also, it leverages the browser's `history.pushState()` and `history.replaceState()` methods to modify the URL without triggering a refresh.
+
 # **UnJS**
 
 Many essential composables and API in Nuxt are forming [UnJS](https://unjs.io/packages?q=&order=1&orderBy=title) ecosystem.
