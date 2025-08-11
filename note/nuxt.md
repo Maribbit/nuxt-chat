@@ -38,7 +38,8 @@ The following code is an organized nested state management pattern in an AI chat
 Composable best practice in Nuxt
 "Project" contains 0 or more "Chats"
 "Chats" contains 0 or more "Chat"
-Notice how these nested lists and objects are separated to smaller composables
+Notice how these nested lists and objects are separated to smaller composables:
+A combination of Dependency Injection (ID as parameter) and Normalization (projectId)
 */
 export interface ChatMessage {
   id: string;
@@ -75,13 +76,13 @@ export default function useProjects() {
 export default function useProject(projectId: sring) {
     // --Inject a single Project from Project Store--
     const { projects } = useProjects();
-    const project = computed(() => projects.value.find((p) => p.id === projectId)
+    const project = computed(() => projects.value.find((p) => p.id === projectId))
+    // --Update Store Deeply--
     function updateProject(updatedProject: Partial<Project>) {
         /*...*/
     }
     retrurn { project, updateProject }
 }
-
 // `useChats.ts`
 export default function useChats() {
     // --Register Chat Store--
