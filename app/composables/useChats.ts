@@ -16,12 +16,16 @@ export default function useChats() {
     };
 
     chats.value.push(chat);
-    return id;
+    return chat;
   }
 
   async function createChatAndNavigate(options: { projectId?: string } = {}) {
-    const id = createChat(options);
-    await navigateTo(`/chats/${id}`);
+    const chat = createChat(options);
+    if (chat.projectId) {
+      await navigateTo(`/projects/${chat.projectId}/chats/${chat.id}`);
+    } else {
+      await navigateTo(`/chats/${chat.id}`);
+    }
   }
 
   function chatsInProject(projectId: string) {

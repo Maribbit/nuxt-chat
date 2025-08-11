@@ -1,3 +1,27 @@
+# File Based Routing
+
+Just add a `<NuxtPage />` component in the App, then Nuxt will read the `/pages` folder to generate routes from it.
+
+## Nested Routes
+
+The following structure is a typical nested route.
+
+- `/projects/` only renders`[projectId].vue` because Nuxt **prefers files over folders**.
+- If there is a `<NuxtPage />` component nested in `[projectId].vue`,
+  - `/projects/1/chats/1` will render `[projectId].vue` with deepest `[id].vue` nested.
+
+```
+-| pages
+---| chats
+------| [id].vue
+---| projects
+------| [projectId].vue
+------| [projectId]
+---------| index.vue
+---------| chats
+------------|[id].vue
+```
+
 # State Management
 
 Start with `useState`, we can create in-memory states inside browser. They are reset if the page is refreshed. 
