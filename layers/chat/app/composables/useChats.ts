@@ -1,5 +1,3 @@
-import { MOCK_CHAT } from "./mockData";
-
 export default function useChats() {
   const chats = useState<Chat[]>("chats", () => [MOCK_CHAT]);
 

@@ -230,6 +230,51 @@ pnpm dlx nuxi prepare
 
 Auto-import is optimum, but if something goes wrong, manual import still works well.
 
+# Server Development
+
+[Server Directory Doc](https://nuxt.com/docs/4.x/guide/directory-structure/server)
+
+```
+-| server/
+---| api/
+-----| chats/
+-------| index.get.ts	# GET /api/chats/
+-------| index.post.ts	# POST /api/chats/
+-------| [id]/
+---------| messages/
+-----------| generate.post.ts	# POST /api/chats/:id/messages/generate
+---| routes/
+-----| bonjour.ts    # /bonjour
+---| middleware/
+-----| log.ts        # log all requests
+```
+
+## Matching HTTP Method
+
+It refers to file names suffixed with `.get`, `.post`, `.put`, `.delete`, ...
+
+Here are several benefits to use this name convention.
+
+- **Dev Tool Support**: we can see their difference and test easily in "Server Routes" Tabs.
+- **Split Logic**: otherwise the handler might become more complex.
+
+## Passing Parameters
+
+Event handlers use methods provided by [h3](#h3) to handle requests.
+
+```typescript
+export default defineEventHandler(async (event) => {
+  const { id } = getRouterParams(event);	// get parameter from route
+  const { content, role } = await readBody(event); // parse HTTP body
+
+  return createMessageForChat({
+    chatId: id,
+    content,
+    role,
+  });
+});
+```
+
 # **UnJS**
 
 Many essential composables and API in Nuxt are forming [UnJS](https://unjs.io/packages?q=&order=1&orderBy=title) ecosystem.
