@@ -218,7 +218,17 @@ Also, it leverages the browser's `history.pushState()` and `history.replaceState
 
 [This doc](https://nuxt.com/docs/4.x/guide/going-further/layers) gives us more information about it.
 
-This is the most advanced feature in Nuxt frontend development. Its complexity is acceptable only if we are building a really complex frontend.
+## Shared Directory
+
+[Shared Directory](https://nuxt.com/docs/4.x/guide/directory-structure/shared) is used to share code **between frontend (Vue App) and backend (Nitro server)**.
+
+According to official doc, any direct child of `shared/types` and `shared/utils` can be auto-imported to other parts of our app. If it is not, we can try command `nuxi prepare`.
+
+```bash
+pnpm dlx nuxi prepare
+```
+
+Auto-import is optimum, but if something goes wrong, manual import still works well.
 
 # **UnJS**
 

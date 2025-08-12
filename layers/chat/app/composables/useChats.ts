@@ -1,4 +1,3 @@
-import type { Chat } from "../types";
 import { MOCK_CHAT } from "./mockData";
 
 export default function useChats() {

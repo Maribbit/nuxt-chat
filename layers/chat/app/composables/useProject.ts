@@ -1,5 +1,4 @@
 import useProjects from "./useProjects";
-import type { Project } from "../types";
 
 export default function useProject(projectId: string) {
   const { projects } = useProjects();
