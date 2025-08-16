@@ -8,13 +8,15 @@
 </template>
 
 <script setup lang="ts">
-  import type { Chat } from "~/types";
   const route = useRoute();
   const {
     chat: chatFromChats,
     messages,
     sendMessage,
+    fetchMessages,
   } = useChat(route.params.id as string);
+
+  await fetchMessages();
 
   if (!chatFromChats.value) {
     navigateTo("/", { replace: true });
