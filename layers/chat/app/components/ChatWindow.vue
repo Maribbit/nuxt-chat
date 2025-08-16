@@ -74,6 +74,7 @@
     height: 100%;
     width: 100%;
     box-sizing: border-box;
+    flex: 1 1 auto;
   }
 
   .chat-container {

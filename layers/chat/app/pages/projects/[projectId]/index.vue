@@ -4,7 +4,7 @@
 
   const { chatsInProject } = useChats();
 
-  const chats = chatsInProject(projectId);
+  const chats = computed(() => chatsInProject(projectId));
 </script>
 
 <template>
