@@ -279,10 +279,59 @@ export default defineEventHandler(async (event) => {
 
 [Data Fetching Official Guide](https://nuxt.com/docs/4.x/getting-started/data-fetching)
 
-In Nuxt, there are many different use cases of data fetching:
+## Setup Stage
 
-1. get a Vue component's initial data (during hydration)
-2. trigger an event at frontend
+In Nuxt, because of SSR, we can fetch many data and render them on server, before sending the component to user.
+
+`$fetch` is not enough because it is just a backend caller, which can be called anywhere, even outside the `setup` function. If we use it in `setup` block carelessly, by default it will be called twice: once during SSR, once in the browser.
+
+To enable this feature correctly, we shall use the hook[ `useAsyncData`](https://nuxt.com/docs/4.x/api/composables/use-async-data).
+
+```typescript
+export default function useChats() {
+  const {
+    data: chats,
+    execute,	// With immediate: false below, it is meaningful
+    status,
+  } = useAsyncData<Chat[]>(
+    "chats",
+    () => {
+      return $fetch<Chat[]>("/api/chats");
+    },
+    {
+      immediate: false,	// Do not fetch immediately when useChats() is called
+      default: () => [],
+    }
+  );
+
+  async function fetchChats() {
+    if (status.value !== "idle") return;
+    await execute();
+  }
+    
+  return {
+    chats,
+    fetchChats,		// It should be called only once in a component's setup.
+    };
+}
+```
+
+[`useFetch`](https://nuxt.com/docs/4.x/api/composables/use-fetch) is a thin wrapper of  `useAsyncData` and `$fetch`. The following setup has exactly the same effect as above.
+
+```typescript
+export default function useChats() {
+  const {
+    data: chats,
+    execute,
+    status,
+  } = useFetch<Chat[]>("/api/chats", {
+    immediate: false,
+    default: () => [],
+  });
+    
+  // ...
+}
+```
 
 # **UnJS**
 
