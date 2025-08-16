@@ -275,6 +275,15 @@ export default defineEventHandler(async (event) => {
 });
 ```
 
+# Data Fetching
+
+[Data Fetching Official Guide](https://nuxt.com/docs/4.x/getting-started/data-fetching)
+
+In Nuxt, there are many different use cases of data fetching:
+
+1. get a Vue component's initial data (during hydration)
+2. trigger an event at frontend
+
 # **UnJS**
 
 Many essential composables and API in Nuxt are forming [UnJS](https://unjs.io/packages?q=&order=1&orderBy=title) ecosystem.
