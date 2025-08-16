@@ -285,12 +285,13 @@ In Nuxt, because of SSR, we can fetch many data and render them on server, befor
 
 `$fetch` is not enough because it is just a backend caller, which can be called anywhere, even outside the `setup` function. If we use it in `setup` block carelessly, by default it will be called twice: once during SSR, once in the browser.
 
-To enable this feature correctly, we shall use the hook[ `useAsyncData`](https://nuxt.com/docs/4.x/api/composables/use-async-data).
+To enable this feature correctly, we shall use the hook[ `useAsyncData`](https://nuxt.com/docs/4.x/api/composables/use-async-data). Here is a simple composable which has a global state `chats` and exposes a `fetchChats` method to fetch initial data when needed.
 
 ```typescript
 export default function useChats() {
+  const chats = useState<Chat[]>("chats", () => []);
   const {
-    data: chats,
+    data: chatsData,
     execute,	// With immediate: false below, it is meaningful
     status,
   } = useAsyncData<Chat[]>(
@@ -307,6 +308,7 @@ export default function useChats() {
   async function fetchChats() {
     if (status.value !== "idle") return;
     await execute();
+    chats.value = chatsData.value;
   }
     
   return {
@@ -320,8 +322,9 @@ export default function useChats() {
 
 ```typescript
 export default function useChats() {
+  const chats = useState<Chat[]>("chats", () => []);
   const {
-    data: chats,
+    data: chatsData,
     execute,
     status,
   } = useFetch<Chat[]>("/api/chats", {
