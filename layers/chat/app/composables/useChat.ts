@@ -21,6 +21,10 @@ export default function useChat(chatId: string) {
   async function sendMessage(message: string) {
     if (!chat.value) return;
 
+    if (messages.value.length === 0) {
+      generateChatTitle(message);
+    }
+
     const newMessage = await $fetch<ChatMessage>(
       `/api/chats/${chatId}/messages`,
       {
@@ -42,6 +46,19 @@ export default function useChat(chatId: string) {
     );
     messages.value.push(aiResponse);
     chat.value.updatedAt = new Date();
+  }
+
+  async function generateChatTitle(message: string) {
+    if (!chat.value) return;
+
+    const updatedChat = await $fetch<Chat>(`/api/chats/${chatId}/title`, {
+      method: "POST",
+      body: {
+        message,
+      },
+    });
+
+    chat.value.title = updatedChat.title;
   }
 
   return {

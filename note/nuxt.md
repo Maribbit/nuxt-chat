@@ -281,9 +281,9 @@ export default defineEventHandler(async (event) => {
 
 There are three methods in Nuxt to fetch data:
 
-1. `$fetch`: a simple caller, suitable for sending data to backend.
-2. `useAsyncData`: a function to be called in SSR, designed to fit in `setup()` hook.
-3. `useFetch`: a wrapper of `useAsyncData` and `$fetch` to simplify SSR setup.
+1. `$fetch`: a simple caller, suitable for **sending data** to backend.
+2. `useAsyncData`: a function to be called in SSR to **get data** in `setup()` hook.
+3. `useFetch`: a wrapper of `useAsyncData` and `$fetch` to simplify SSR data getting.
 
 ## Setup Stage
 
