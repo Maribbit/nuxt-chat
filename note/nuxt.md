@@ -342,7 +342,61 @@ export default function useChats() {
 }
 ```
 
-# **UnJS**
+# Persistent
+
+## key-value
+
+Follow the [official guide](https://nuxt.com/docs/4.x/guide/directory-structure/server#server-storage), we can setup [unstorage](#unstorage) in Nitro to access databases with `useStorage` composable.
+
+```typescript
+/* nuxt.config.ts */
+export default defineNuxtConfig({
+  //...
+  nitro: {
+    storage: {
+      db: {
+        driver: "fs",
+        base: "./.data",
+      },
+    },
+  },
+
+  $production: {
+    nitro: {
+      storage: {
+        db: {
+          driver: "netlify-blobs",
+          name: "db",
+        },
+      },
+    },
+  },
+});
+
+/* example usage */
+const storage = useStorage<Chat[]>("db");
+const chatsKey = "chats:all";
+async function getChats(): Promise<Chat[]> {
+  let chats = await storage.getItem(chatsKey);
+
+  // Initialize with mock data
+  if (chats === null) {
+    chats = [MOCK_CHAT];
+    await saveChats(chats);
+  }
+
+  return chats;
+}
+
+async function saveChats(chats: Chat[]): Promise<void> {
+  await storage.setItem(chatsKey, chats);
+}
+
+```
+
+
+
+# UnJS
 
 Many essential composables and API in Nuxt are forming [UnJS](https://unjs.io/packages?q=&order=1&orderBy=title) ecosystem.
 
@@ -385,15 +439,21 @@ We can find them and many other functions for `Event` in [h3 Request](https://v1
 
 This is what behind `$fetch` in Nuxt JS.
 
+## unstorage
+
+[unstorage](https://unstorage.unjs.io/) is a key-value storage library features many different [drivers](https://unstorage.unjs.io/drivers) (Node fs, MongoDB, Netlify Blobs, ...).
+
+We can even create [custom drivers](https://unstorage.unjs.io/guide/custom-driver) based on its framework.
+
 # Configuration
 
 The [official configuration doc](https://nuxt.com/docs/4.x/api/nuxt-config) is really long.
 
-## [runtimeConfig](https://nuxt.com/docs/4.x/api/nuxt-config#runtimeconfig-1)
+## [`runtimeConfig`](https://nuxt.com/docs/4.x/api/nuxt-config#runtimeconfig-1)
 
 Useful for dynamic config or environment variables, either server-only or client-only(`public`).
 
-## [app.config.ts](https://nuxt.com/docs/4.x/guide/directory-structure/app/app-config)
+## [`app.config.ts`](https://nuxt.com/docs/4.x/guide/directory-structure/app/app-config)
 
 This is **reactive**, and **global**, meaning that it is always exposed to client side.
 

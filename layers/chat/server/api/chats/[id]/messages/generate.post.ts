@@ -9,7 +9,7 @@ import {
 
 export default defineEventHandler(async (event) => {
   const { id } = getRouterParams(event);
-  const history = getMessagesByChatId(id);
+  const history = await getMessagesByChatId(id);
   const ollamaModel = createOllamaModel();
   const reply = await generateChatResponse(ollamaModel, history);
   return createMessageForChat({
