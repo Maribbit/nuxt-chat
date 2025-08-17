@@ -12,5 +12,5 @@
 <script setup lang="ts">
   const { fetchChats } = useChats();
   const { fetchProjects } = useProjects();
-  Promise.all([fetchChats(), fetchProjects()]);
+  await Promise.all([fetchChats(), fetchProjects()]);
 </script>
