@@ -249,6 +249,10 @@ Auto-import is optimum, but if something goes wrong, manual import still works w
 -----| log.ts        # log all requests
 ```
 
+## Server Routes
+
+Each hander defined in `api/` and `routes` generates a **server route** in Nuxt.
+
 ## Matching HTTP Method
 
 It refers to file names suffixed with `.get`, `.post`, `.put`, `.delete`, ...
@@ -274,6 +278,78 @@ export default defineEventHandler(async (event) => {
   });
 });
 ```
+
+## Middleware
+
+Define a handler in `/server/middleware`, and it will run **before any server route**.
+
+These middleware are called **server middleware** (aka Nitro middleware) .
+
+However, this approach should be taken carefully because it might confuse logic flow and make our routes slower. Checkout [this blog](https://masteringnuxt.com/blog/server-middleware-is-an-anti-pattern-in-nuxt) to help understand.
+
+```typescript
+export default defineEventHandler(async (event) => {
+  const storage = useStorage("db");
+  await storage.setItem(`telemetry:request:${Date.now()}`, {
+    url: getRequestURL(event),
+    method: event.method,
+    headers: getRequestHeaders(event),
+  });
+});
+```
+
+## Cache Response
+
+This is an easy way to optimize API performance: we cache the response of an API and directly respond with it for a time range, without running any code.
+
+This can be achieved with `defineCachedEventHandler` provided by [Nitro Cache](https://nitro.build/guide/cache).
+
+By default, in development, the cached responses are stored in `.nuxt/cache/nitro/handlers`.
+
+```typescript
+// The response of this handler will be the same in every 20 seconds.
+export default defineCachedEventHandler(
+  async (_event) => {
+    console.log("Fetching all chats...");
+    const storage = useStorage("db");
+    await storage.setItem("chats:has-new-chat", false);
+    return getAllChats();
+  },
+  {
+    name: "getAllChats",
+    maxAge: 20,
+  }
+);
+```
+
+A more practical usage is to set a flag which indicates whether the endpoint should be refreshed.
+
+```typescript
+export default defineCachedEventHandler(
+  async (_event) => {
+    console.log("Fetching all chats...");
+    const storage = useStorage("db");
+    await storage.setItem("chats:has-new-chat", false);
+    return getAllChats();
+  },
+  {
+    name: "getAllChats",
+    maxAge: 0,
+    swr: false,		// default to be true
+    async shouldInvalidateCache() {
+      const storage = useStorage("db");
+      const hasNewChat = await storage.getItem<boolean>("chats:has-new-chat");
+      return hasNewChat || false;
+    },
+  }
+);
+```
+
+The option `swr` stands for `stale-while-revalidate`.
+
+It answers the question: shall we wait the function `shouldInvalidateCache` to return before serving the cache?
+
+It is set to `true` by default to maximize efficiency, which means `shouldInvalidateCache` does not block the response.
 
 # Data Fetching
 
@@ -346,7 +422,7 @@ export default function useChats() {
 
 ## key-value
 
-Follow the [official guide](https://nuxt.com/docs/4.x/guide/directory-structure/server#server-storage), we can setup [unstorage](#unstorage) in Nitro to access databases with `useStorage` composable.
+Follow the [official guide](https://nuxt.com/docs/4.x/guide/directory-structure/server#server-storage). We can setup [unstorage](#unstorage) in Nitro to access databases with `useStorage` composable.
 
 ```typescript
 /* nuxt.config.ts */
@@ -393,8 +469,6 @@ async function saveChats(chats: Chat[]): Promise<void> {
 }
 
 ```
-
-
 
 # UnJS
 

@@ -11,5 +11,8 @@ export default defineEventHandler(async (event) => {
   const model = createOllamaModel();
   const title = await generateChatTitle(model, message);
 
+  const storage = useStorage("db");
+  await storage.setItem(`chats:has-new-chat`, true);
+
   return updateChat(id, { title });
 });
