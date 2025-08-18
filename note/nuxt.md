@@ -470,6 +470,69 @@ async function saveChats(chats: Chat[]): Promise<void> {
 
 ```
 
+# Validation
+
+## Zod with `readValidateBody`
+
+`readValidateBody` is part of the h3 request utils. Check out the [doc](https://v1.h3.dev/utils/request#readvalidatedbodyevent-validate).
+
+It's second parameter is a validation function, which could be customized.
+
+[Zod](https://zod.dev/) is a popular library to declare a schema and generate validation.
+
+```typescript
+export default defineEventHandler(async (event) => {
+  const { id } = getRouterParams(event);
+
+  const { success, data } = await readValidatedBody(
+    event,
+    CreateMessageSchema.safeParse
+  );
+
+  if (!success) {
+    return 400;
+  }
+
+  return createMessageForChat({
+    chatId: id,
+    content: data.content,
+    role: data.role,
+  });
+});
+```
+
+```typescript
+import { z } from "zod";
+
+// Message role enum and type definition
+const MessageRole = z.enum(["user", "assistant"]);
+
+// Base message schema
+export const MessageSchema = z
+  .object({
+    content: z.string(),
+    role: MessageRole,
+    id: z.uuid().optional(),
+    chatId: z.uuid().optional(),
+  })
+  .strict();
+
+// Chat and message related schemas
+export const ChatMessageSchema = z
+  .object({
+    messages: z.array(MessageSchema),
+    chatId: z.uuid(),
+  })
+  .strict();
+
+export const CreateMessageSchema = z
+  .object({
+    content: z.string().min(1),
+    role: MessageRole,
+  })
+  .strict();
+```
+
 # UnJS
 
 Many essential composables and API in Nuxt are forming [UnJS](https://unjs.io/packages?q=&order=1&orderBy=title) ecosystem.
